@@ -22,6 +22,13 @@
     creates={{ target_directory }}/wordpress
   when: wp_archive.stat.exists
 
+- name: Move files from wordpress folder to parent directory
+  raw: mv {{ target_directory }}/wordpress/* {{ target_directory }}
+
+- name: delete worpress folder
+  file: path={{ target_directory }}/wordpress state=absent
+
+
 - name: create WordPress database
   mysql_db: name={{ wp_db_name }} state=present
   when: wp_create_mysql_db
@@ -40,4 +47,4 @@
   register: wp_salt
 
 - name: copy WordPress config file
-  template: src=wp-config.php.j2 dest={{ target_directory }}/wordpress/wp-config.php
+  template: src=wp-config.php.j2 dest={{ target_directory }}/wp-config.php
